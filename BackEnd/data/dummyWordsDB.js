@@ -1,5 +1,9 @@
 let words = [
     {
+        "word_id": 0,
+        "word_to_guess": "javascript"
+    },
+    {
         "word_id": 1,
         "word_to_guess": "javascript"
     },

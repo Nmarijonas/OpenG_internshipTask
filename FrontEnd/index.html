@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="playing">
+        <label class="center">GUESS THE WORD!</label>
+        <label id="wordLabel"></label>
+        <div style="font-size: 25px;" class="center">Guessed letters:</div>
+        <label class="center" id="guessedLetters"></label>
+        <div style="font-size: 25px;" class="center">Lives left:</div>
+        <label class="center" id="livesLeft"></label>
+        <textarea cols="1" rows="1" maxlength="1" id="guessInput"></textarea>
+        <button id="guessBtn" onclick="guessLetter()">Guess</button>
+    </div>
+    <button id="playBtn" onclick="startNewPlaySession(), getRandomWord()">Play</button>
+    <div class="backGround"></div>
+</body>
+
+</html>
+<script>
+    var givenWord;
+    function startNewPlaySession() {
+        let url = 'http://localhost:3333/player';
+        fetch(url).then(response => {
+            return response.json();
+        }).then(player => {
+            console.log(player);
+            document.getElementById('playing').style.display = "block";
+            document.getElementById('playBtn').style.display = "none";
+            let livesLeft = document.getElementById('livesLeft');
+            let info = player.data;
+            let text = document.createElement('label');
+            text.innerText = info.lives;
+            livesLeft.append(text);
+        });
+    }
+
+    function getRandomWord() {
+        let url = 'http://localhost:3333/word';
+        fetch(url).then(response => {
+            return response.json();
+        }).then(player => {
+            let label = document.getElementById('wordLabel');
+            label.textContent = "";
+            let word = player.data.word_to_guess;
+            for (let i = 0; i < word.length; i++) {
+                let letter = document.createElement('span');
+                letter.setAttribute('class', word[i]);
+                letter.textContent = "?"
+                label.appendChild(letter);
+            }
+            givenWord = word;
+        });
+    }
+
+    function guessLetter() {
+        let url = 'http://localhost:3333/word/guess';
+        let guessInput = document.getElementById('guessInput');
+        let guessLetter = guessInput.value;
+        if (guessLetter) {
+            let guessedLetters = document.getElementById('guessedLetters');
+            guessedLetters.innerText += guessLetter;
+            fetch(url, {
+                method: 'post',
+                body: JSON.stringify(guessLetter)
+            }).then(res => {
+                return res.json();
+            }).then(data => {
+                if (typeof data == 'number') {
+                    console.log('lives!!!');
+                    let livesLeft = document.getElementById('livesLeft');
+                    livesLeft.textContent = "";
+                    let text = document.createElement('label');
+                    text.innerText = data;
+                    livesLeft.append(text);
+                }
+                console.log(data);
+            });
+        }
+    }
+</script>
+
+<style>
+    body,
+    html {
+        margin: 0;
+        height: 100%;
+        background-color: grey;
+    }
+
+    .backGround {
+        background-image: url("background.png");
+        height: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-size: auto 500px;
+    }
+
+    label {
+        color: white;
+        display: block;
+    }
+
+    .center {
+        text-align: center;
+        line-height: 150%;
+        font-size: 50px;
+        color: white;
+    }
+
+    span {
+        margin: auto;
+        border: 2px solid white;
+        padding: 15px;
+    }
+
+    #playing {
+        display: none;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        padding: 25px;
+        border: 5px solid white;
+        transform: translate(-50%, -50%);
+        background-color: grey;
+    }
+
+    #wordLabel {
+        margin-top: 50px;
+        margin-bottom: 50px;
+        font-family: monospace;
+        font-size: 13px;
+        padding-left: 5px;
+        letter-spacing: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    #guessedLetters {
+        font-family: monospace;
+        font-size: 13px;
+        padding-left: 5px;
+        letter-spacing: 20px;
+    }
+
+    #livesLeft {
+        font-size: 13px;
+    }
+
+    #guessInput {
+        font-size: 25px;
+        padding: 5px;
+        resize: none;
+    }
+
+    #guessBtn {
+        padding: 25px;
+    }
+
+    #playBtn {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        padding: 25px;
+        border: 5px solid black;
+        transform: translate(-50%, -50%);
+        background-color: white;
+    }
+</style>

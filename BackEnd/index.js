@@ -11,8 +11,8 @@ app.use(logger('dev'));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use("/words", wordsRouter);
-app.use("/play", playerRouter);
+app.use("/word", wordsRouter);
+app.use("/player", playerRouter);
 
 app.listen(port, function () {
     console.log("Running on port: " + port);
