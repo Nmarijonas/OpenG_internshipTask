@@ -1,6 +1,5 @@
 let player = {
-    "lives": 10,
-    "letters": []
+    "lives": 10
 }
 
 module.exports = player;
