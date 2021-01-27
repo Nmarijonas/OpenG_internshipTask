@@ -1,3 +1,6 @@
+Back-end paleidimas:
+C:\..\..\BackEnd> npm run server
+
 Reikalavimai:
  * Programa turi turėti 2 atskiras dalis: serverinę (server/ on Node) ir klientą (client/ on Browser)
  * Klientas su serveriu bendrauja internetu, bendravimo protokolas nėra svarbus (HTTP, Protobuf, custom, etc.)
